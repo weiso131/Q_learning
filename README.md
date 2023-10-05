@@ -18,7 +18,8 @@ Q_form = np.zeros((n, m, n, m) + (4,))
 
 ## Q learning怎麼學習
 
-![image](https://github.com/weiso131/Q_learning/assets/131360912/630b8a9d-89ef-4297-98ca-cd3b2586b643)
+![image](https://github.com/weiso131/Q_learning/assets/131360912/05da2efa-6410-4d69-8da9-244beb96bee0)
+
 
 
 [維基百科](https://zh.wikipedia.org/zh-tw/Q%E5%AD%A6%E4%B9%A0)
@@ -98,16 +99,19 @@ done        -> player的座標是否和goal重疊(是否得分)
 ### 訓練過程
 #### 隨機成分較高的時候
 剛開始隨機亂走比較多，但因為場地只有4x4，player勉強能走到goal
+
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/96496dd8-6c8c-4f06-8685-4506f73893e5)
 
 
 #### 隨機剛開始變少的時候
 依照表格做事，結果經常找不到goal
+
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/9cc592ac-07bd-43cd-80bd-27b2d94103d2)
 
 
 #### 一段時間之後
 慢慢能找到通往目標的路
+
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/a00c1e47-2a7d-47b0-ad74-f61c6f209af9)
 
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/59003c31-b3ac-4be5-b1e8-994c0f22f45f)
@@ -115,15 +119,18 @@ done        -> player的座標是否和goal重疊(是否得分)
 
 #### epoch超過1e6之後
 基本上都能找到通往目標的路，之後到5e6都是在慢慢優化
+
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/130eff2d-41eb-4d36-8fab-7fd8c1835696)
 
 
 ## 結果
 基本上都能在個位數個步驟走完，因為場地只有4x4
+
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/f5710161-1c0e-49f5-9bda-1a5737d86402)
 
 
 但有時候會繞路
+
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/f6f5a25e-0989-4567-b906-c95cf9921037)
 
 再多訓練久一點，或許真的能訓練出能一直找出最佳解的模型，但那太久了
