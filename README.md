@@ -137,4 +137,42 @@ done        -> player的座標是否和goal重疊(是否得分)
 而且場地再大一點，訓練所需的epoch數量只會更大
 直接使用4個狀態的方法不夠有效率
 
+## 寫個腳本
+雖然我用Q learning來解這個遊戲
+但這遊戲顯而易見的有個很簡單的最佳解腳本
+```python=
+def action_choice(state):
+    py, px, gy, gx = state
+    
+    if (py != gy):
+        if (gy - py < 0):
+            return 0
+        else:
+            return 1
+    elif (px != gx):
+        if (gx - px < 0):
+            return 2
+        else:
+            return 3
+```
+### 用腳本替代隨機
+我延長了參考腳本的時間
+到了幾乎由Q_form全權決定行動的50000過後
+找到的路徑步數也都壓在8以內
 
+![image](https://github.com/weiso131/Q_learning/assets/131360912/63dbfeac-256c-40cd-a0b9-3887964f545d)
+
+
+似乎很順利地學到最佳解做法
+
+![image](https://github.com/weiso131/Q_learning/assets/131360912/a65d716b-f6c7-4568-bfe7-6e1a54106887)
+
+
+我有試過20x20的地圖，訓練過程完全參考腳本
+經過5e6個epoch之後，模型也能學到最佳解
+看來有個腳本來學習是最有效率的
+事實上，在其他的強化學習應用中，一開始先參考純貪心法的腳本似乎也蠻常見的
+(by chatGPT)
+只是當有個腳本是最佳解的時候
+還在訓練模型
+根本是多此一舉啊
