@@ -92,6 +92,7 @@ done        -> player的座標是否和goal重疊(是否得分)
 ```
 
 ## 最初的想法
+[ipynb連結](https://nbviewer.org/github/weiso131/Q_learning/blob/main/Untitled.ipynb)
 - 直接使用observation的四個值來呼叫Q_learning的表格
 - 一開始先四個方向隨機亂走，之後再使用Q_learning表格的數值
 - 然後我train了500000次
@@ -123,7 +124,7 @@ done        -> player的座標是否和goal重疊(是否得分)
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/130eff2d-41eb-4d36-8fab-7fd8c1835696)
 
 
-## 結果
+### 結果
 基本上都能在個位數個步驟走完，因為場地只有4x4
 
 ![image](https://github.com/weiso131/Q_learning/assets/131360912/f5710161-1c0e-49f5-9bda-1a5737d86402)
@@ -156,6 +157,7 @@ def action_choice(state):
             return 3
 ```
 ### 用腳本替代隨機
+[ipynb連結](https://nbviewer.org/github/weiso131/Q_learning/blob/best_solution/q_learning.ipynb)
 我延長了參考腳本的時間
 到了幾乎由Q_form全權決定行動的50000過後
 找到的路徑步數也都壓在8以內
@@ -176,3 +178,55 @@ def action_choice(state):
 只是當有個腳本是最佳解的時候
 還在訓練模型
 根本是多此一舉啊
+
+## 調整Q_form
+[ipynb連結](https://nbviewer.org/github/weiso131/Q_learning/blob/new_way/q_learning.ipynb)
+前面的Q_form是直接接收player和goal的位置，然而，我們其實只要知道他們相減的數值正負就能判斷該往哪移動
+
+於是我就把Q_表格改成這樣:
+```python=
+Q_form = np.zeros((3, 3) + (4,))
+#goal在player上或下或沒差, goal在player左或右或沒差
+```
+並對state做轉換
+```python=
+def convert(p, g):
+    """
+    將玩家與目標的距離是正或負或0
+    轉換成0或1或2
+    """
+    if (g - p > 0):
+        return 0
+    elif (g - p < 0):
+        return 1
+    else:
+        return 2
+
+def state_convert(state):
+    """
+    將原本遊戲回報的state
+    轉成Q_form可用的格式
+    """
+    py, px, gy, gx = state
+    return (convert(py, gy), convert(px, gx))
+```
+### 測試結果
+回到與最初的狀態一樣，是先隨機亂走，原本也跟之前一樣epoch=5e5，但在把與腳本最佳解的步數差距圖像化之後，發現我其實訓練到20000他們的差距幾乎都是0了(現在才想起來我可以把它圖像化)
+
+#### 訓練過程與腳本最佳解的步數差距
+後半部偶爾會出現非最佳解，應該是剛好隨機到隨機亂走的模式(我沒有讓隨機亂走的機率衰減到0)
+![image](https://github.com/weiso131/Q_learning/assets/131360912/84e01709-a5c5-49d8-8c6e-5b63541603c5)
+
+
+#### 測試過程與腳本最佳解的步數差距
+他看起來是學到最佳解的方法了
+![image](https://github.com/weiso131/Q_learning/assets/131360912/4f060255-c09b-4b20-ae96-54f7e500e450)
+
+
+
+
+#### 換成100x100的地圖，並且跑10000次
+因為這個方法只關心相對位置，所以不管幾乘幾都能找到最佳解
+
+![image](https://github.com/weiso131/Q_learning/assets/131360912/6de5e217-0cda-46e2-a208-8f2fdd1311fa)
+
